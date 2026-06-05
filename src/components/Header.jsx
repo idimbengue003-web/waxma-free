@@ -1,0 +1,103 @@
+import { useState, useEffect } from 'react';
+import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK } from '../utils/storage';
+
+export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [limitInfo, setLimitInfo] = useState({ reached: false, count: 0 });
+
+  useEffect(() => {
+    const phone = getStoredPhone();
+    if (phone) {
+      setLimitInfo({ reached: isLimitReached(phone), count: getWeeklyCount(phone) });
+    }
+  }, []);
+
+  return (
+    <header className="bg-waxma-primary/95 backdrop-blur-md sticky top-0 z-50 border-b border-waxma-accent/20">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-br from-waxma-highlight to-emerald-600 text-white font-extrabold text-xl px-4 py-2 rounded-xl tracking-tight shadow-lg shadow-waxma-highlight/20">
+            WAXMA
+          </div>
+          <span className="text-waxma-highlight font-bold text-xs bg-waxma-highlight/10 px-3 py-1 rounded-lg border border-waxma-highlight/20 uppercase tracking-wider">
+            Free
+          </span>
+        </div>
+
+        {/* Desktop */}
+        <nav className="hidden md:flex items-center gap-6">
+          <a href="#feed" className="text-waxma-text font-medium hover:text-waxma-highlight transition-colors text-sm">Demandes</a>
+          {getStoredPhone() && (
+            <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
+              limitInfo.reached ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-waxma-highlight/10 text-waxma-highlight border border-waxma-highlight/20'
+            }`}>
+              {limitInfo.count}/{DEMAND_LIMIT_PER_WEEK} cette semaine
+            </span>
+          )}
+          <a href="#post" className="bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-waxma-highlight/20 transition-all animate-pulse-glow text-sm">
+            + Poster
+          </a>
+          <a href="https://waxma-pro.lu" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-waxma-highlight/10 text-waxma-highlight border border-waxma-highlight/20 px-4 py-2 rounded-xl text-sm font-bold hover:bg-waxma-highlight/20 transition">
+            Vendeur ? → PRO
+          </a>
+          <a href="#/admin" className="text-waxma-muted hover:text-waxma-text transition-colors text-xs">Admin</a>
+        </nav>
+
+        {/* Mobile */}
+        <div className="md:hidden flex items-center gap-3">
+          <a href="https://waxma-pro.lu" target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-1.5 bg-waxma-highlight/10 text-waxma-highlight border border-waxma-highlight/20 px-3 py-1.5 rounded-lg text-xs font-bold">
+            Vendeur → PRO
+          </a>
+          <button onClick={() => setMenuOpen(!menuOpen)} className="text-waxma-text p-2" aria-label="Menu">
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              {menuOpen ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />}
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-waxma-secondary/80 text-center py-2.5 text-sm font-medium tracking-wide border-y border-waxma-accent/10">
+        <span className="text-waxma-text">Poste ce que tu veux.</span>{' '}
+        <span className="text-waxma-highlight font-semibold">Gratos.</span>
+      </div>
+
+      {limitInfo.reached && (
+        <div className="bg-red-500/10 border-b border-red-500/20 text-red-400 text-center py-3 text-xs font-semibold">
+          Limite 3/sem atteinte, revenez lundi. Passe sur{' '}
+          <a href="https://waxma-pro.lu" className="underline font-bold hover:text-red-300">WAXMA Pro</a>
+        </div>
+      )}
+
+      {menuOpen && (
+        <div className="md:hidden bg-waxma-secondary border-t border-waxma-accent/20 animate-fade-in-up">
+          <nav className="flex flex-col p-6 gap-3">
+            <a href="#feed" onClick={() => setMenuOpen(false)} className="text-waxma-text font-medium py-3 px-5 rounded-xl hover:bg-waxma-accent/10 transition text-sm">Demandes</a>
+            <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">+ Poster une demande</a>
+
+            <div className="rounded-xl p-4 mt-1 bg-waxma-highlight/5 border border-waxma-highlight/15">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">💡</span>
+                <span className="font-bold text-sm text-waxma-highlight">Tu es vendeur ?</span>
+              </div>
+              <p className="text-xs text-waxma-muted mb-3">Sur WAXMA PRO, achète des points pour révéler les numéros WhatsApp des clients.</p>
+              <a href="https://waxma-pro.lu" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
+                className="block text-center bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold py-3 px-4 rounded-xl text-sm">
+                Vendeur ? → WAXMA PRO
+              </a>
+            </div>
+
+            {limitInfo.reached && (
+              <div className="bg-red-500/20 text-red-400 font-bold py-3 px-5 rounded-xl text-center text-sm border border-red-500/20">
+                Limite 3/sem atteinte → WAXMA Pro
+              </div>
+            )}
+            <a href="#/admin" onClick={() => setMenuOpen(false)} className="text-waxma-muted text-xs py-2 px-5 hover:text-waxma-text">Admin</a>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}
