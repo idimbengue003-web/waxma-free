@@ -1,18 +1,15 @@
 import { useState } from 'react';
-import { getFreeVendor, getFreePoints, addFreePoints, TARIFS_RECHARGE, ABONNEMENTS, getRevealsFromPoints, getRevealCost, generateRef, updateVendorRole, POINTS_PAR_REVELATION } from '../utils/storage';
+import { getFreeVendor, getFreePoints, addFreePoints, TARIFS_RECHARGE, getRevealsFromPoints, generateRef, POINTS_PAR_REVELATION } from '../utils/storage';
 
 export default function RechargePage() {
   const vendor = getFreeVendor();
   const [selectedTier, setSelectedTier] = useState(null);
   const [method, setMethod] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState('choose');
   const [phone, setPhone] = useState('');
   const [paymentRef, setPaymentRef] = useState('');
   const [error, setError] = useState('');
-  const [upgradedRole, setUpgradedRole] = useState(null);
 
-  // Auto-create vendor profile if not exists
   if (!vendor) {
     return (
       <div className="py-16 px-4">
@@ -26,30 +23,14 @@ export default function RechargePage() {
     );
   }
 
-  const isKing = vendor.role === 'king';
-  const isDiambar = vendor.role === 'diambar';
   const currentPoints = getFreePoints();
-  const revealsFromPoints = getRevealsFromPoints(vendor.role || 'free');
-  const revealCost = getRevealCost(vendor.role || 'free');
-  const showAbonnements = vendor.role === 'free' || vendor.role === 'diambar';
+  const revealsFromPoints = getRevealsFromPoints();
 
   const processPayment = () => {
     if (selectedTier) {
       addFreePoints(selectedTier.points);
-      if (selectedTier.role && selectedTier.role !== vendor.role) {
-        const rolePriority = { free: 0, diambar: 1, king: 2 };
-        if (rolePriority[selectedTier.role] > rolePriority[vendor.role || 'free']) {
-          updateVendorRole(selectedTier.role);
-          vendor.role = selectedTier.role;
-          setUpgradedRole(selectedTier.role);
-        }
-      }
     }
-    if (upgradedRole || (selectedTier?.role && selectedTier.role !== 'free' && selectedTier.role !== vendor.role)) {
-      setStep('upgraded');
-    } else {
-      setStep('success');
-    }
+    setStep('success');
   };
 
   // ── Step: Choose tier ──
@@ -61,87 +42,35 @@ export default function RechargePage() {
             <div className="text-5xl mb-3">💎</div>
             <h1 className="text-2xl font-black gradient-text">Acheter des Points</h1>
             <p className="text-gray-500 mt-2">Révèle les numéros WhatsApp des clients intéressés</p>
-            <p className="text-sm text-gray-400 mt-1">1 numéro = <span className="font-bold text-orange-500">{revealCost.toLocaleString('fr-FR')} pts</span>
-              {isKing ? ' (tarif KING 👑)' : isDiambar ? ' (tarif Diambar ⚡)' : ''}
-            </p>
+            <p className="text-sm text-gray-400 mt-1">1 numéro = <span className="font-bold text-orange-500">1 500 pts</span></p>
             <div className="mt-3 inline-flex items-center gap-3 bg-orange-50 border border-orange-200 px-5 py-2.5 rounded-xl">
               <span className="text-lg">💎</span>
               <span className="font-bold text-orange-600">{currentPoints.toLocaleString('fr-FR')} pts</span>
               <span className="text-xs text-gray-400">({revealsFromPoints} révélations)</span>
             </div>
-            {isDiambar && <p className="text-blue-500 font-bold text-sm mt-2">⚡ Abonnement Diambar actif</p>}
-            {isKing && <p className="text-yellow-500 font-bold text-sm mt-2">👑 Abonnement KING VIP actif</p>}
           </div>
 
-          {/* Abonnements */}
-          {showAbonnements && (
-            <div className="mb-12">
-              <h2 className="text-xl font-black text-gray-900 text-center mb-6">🚀 Passe en premium</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {ABONNEMENTS.map(ab => (
-                  <div key={ab.role} className={`rounded-2xl p-6 border-2 transition hover:shadow-xl bg-white ${
-                    ab.role === 'king'
-                      ? 'border-yellow-400/40 hover:border-yellow-400'
-                      : 'border-blue-400/40 hover:border-blue-400'
-                  }`}>
-                    <div className="text-center mb-4">
-                      <span className="text-4xl">{ab.emoji}</span>
-                      <h3 className={`text-xl font-black mt-2 ${ab.role === 'king' ? 'text-yellow-600' : 'text-blue-500'}`}>{ab.label}</h3>
-                      <p className="text-gray-900 text-2xl font-black mt-1">{ab.prix.toLocaleString('fr-FR')} <span className="text-sm text-gray-400">FCFA</span></p>
-                    </div>
-                    <ul className="space-y-2 mb-5">
-                      {ab.perks.map((perk, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                          <span className="text-green-500 mt-0.5">✓</span>
-                          <span>{perk}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="text-center text-xs text-gray-400 mb-3">+ {ab.points.toLocaleString('fr-FR')} pts inclus</p>
-                    <button onClick={() => {
-                      const tier = TARIFS_RECHARGE.find(t => t.role === ab.role);
-                      if (tier) setSelectedTier(tier);
-                    }} className={`w-full font-bold py-3.5 rounded-xl transition hover:shadow-lg ${
-                      ab.role === 'king'
-                        ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
-                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                    }`}>
-                      Devenir {ab.label} {ab.emoji}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Message vendeur */}
+          <div className="max-w-2xl mx-auto mb-8 bg-orange-50 border border-orange-200 rounded-2xl p-5 text-center">
+            <p className="font-bold text-orange-600 text-sm">📢 Les annonces arrivent à tout moment — {vendor.name} — Reste connecté</p>
+          </div>
 
-          {/* Recharges simples */}
-          <h2 className="text-xl font-black text-gray-900 text-center mb-6">{showAbonnements ? 'Ou recharge simple' : '💎 Recharger des points'}</h2>
+          {/* Recharges */}
+          <h2 className="text-xl font-black text-gray-900 text-center mb-6">💎 Recharger des points</h2>
           <div className="max-w-3xl mx-auto space-y-3">
-            {TARIFS_RECHARGE.filter(t => !t.role || t.role === vendor.role).map(tier => {
-              const tierRevealCost = tier.role ? getRevealCost(tier.role) : revealCost;
-              const reveals = Math.floor(tier.points / tierRevealCost);
-              const isAbonnement = !!tier.role;
+            {TARIFS_RECHARGE.map(tier => {
+              const reveals = Math.floor(tier.points / POINTS_PAR_REVELATION);
               return (
                 <button key={tier.prix} onClick={() => setSelectedTier(tier)}
-                  className={`w-full rounded-2xl p-5 flex items-center gap-5 transition-all hover:shadow-xl active:scale-[0.99] border-2 text-left bg-white ${
-                    isAbonnement && tier.role === 'king' ? 'border-yellow-400/40 hover:border-yellow-400'
-                      : isAbonnement && tier.role === 'diambar' ? 'border-blue-400/40 hover:border-blue-400'
-                      : 'border-gray-200 hover:border-orange-400'
-                  }`}>
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-black flex-shrink-0 ${
-                    isAbonnement && tier.role === 'king' ? 'bg-yellow-50 text-yellow-600'
-                      : isAbonnement && tier.role === 'diambar' ? 'bg-blue-50 text-blue-500'
-                      : 'bg-orange-50 text-orange-500'
-                  }`}>{(tier.points / 1000).toFixed(tier.points % 1000 === 0 ? 0 : 1)}k</div>
+                  className="w-full rounded-2xl p-5 flex items-center gap-5 transition-all hover:shadow-xl active:scale-[0.99] border-2 text-left bg-white border-gray-200 hover:border-orange-400">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-lg font-black flex-shrink-0 bg-orange-50 text-orange-500">
+                    {tier.points >= 1000 ? `${(tier.points / 1000).toFixed(tier.points % 1000 === 0 ? 0 : 1)}k` : tier.points}
+                  </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-bold text-gray-900 text-lg">{tier.prix.toLocaleString('fr-FR')} FCFA</p>
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${
-                        isAbonnement && tier.role === 'king' ? 'bg-yellow-100 text-yellow-700'
-                          : isAbonnement && tier.role === 'diambar' ? 'bg-blue-100 text-blue-600'
-                          : 'bg-gray-100 text-gray-500'
-                      }`}>{tier.label}</span>
-                      {isAbonnement && tier.role === 'king' && <span className="text-xs font-bold bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-lg">MEILLEUR</span>}
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-lg bg-gray-100 text-gray-500">{tier.label}</span>
+                      {tier.prix === 10000 && <span className="text-xs font-bold bg-orange-100 text-orange-600 px-2 py-0.5 rounded-lg">MEILLEUR</span>}
                     </div>
                     <p className="text-sm text-gray-400 mt-1">
                       <span className="font-bold text-gray-700">{tier.points.toLocaleString('fr-FR')} points</span> — {reveals} numéro{reveals > 1 ? 's' : ''} WhatsApp
@@ -161,19 +90,13 @@ export default function RechargePage() {
 
   // Step: Choose payment
   if (step === 'choose' && selectedTier && !method) {
-    const isAbonnement = !!selectedTier.role;
     return (
       <div className="py-12 px-4">
         <div className="max-w-lg mx-auto">
           <button onClick={() => setSelectedTier(null)} className="text-gray-400 text-sm mb-6 hover:text-gray-600">← Retour</button>
           <div className="text-center mb-10">
-            <div className="text-5xl mb-3">{isAbonnement ? (selectedTier.role === 'king' ? '👑' : '⚡') : '💎'}</div>
+            <div className="text-5xl mb-3">💎</div>
             <h1 className="text-2xl font-black gradient-text">{selectedTier.points.toLocaleString('fr-FR')} Points</h1>
-            {isAbonnement && (
-              <p className={`font-bold mt-2 ${selectedTier.role === 'king' ? 'text-yellow-500' : 'text-blue-500'}`}>
-                {selectedTier.role === 'king' ? '👑 Abonnement KING VIP' : '⚡ Abonnement Diambar'}
-              </p>
-            )}
             <div className="mt-3 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-orange-50 border border-orange-200">
               <span className="text-2xl font-black text-orange-600">{selectedTier.prix.toLocaleString('fr-FR')}</span>
               <span className="text-gray-400 font-bold text-sm">FCFA</span>
@@ -266,44 +189,20 @@ export default function RechargePage() {
     );
   }
 
-  // Step: Upgraded
-  if (step === 'upgraded') {
-    const newRole = upgradedRole || selectedTier?.role;
-    const isUpKing = newRole === 'king';
-    const newPoints = getFreePoints();
-    const newRevealCost = getRevealCost(newRole);
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center px-4">
-        <div className="max-w-sm text-center">
-          <div className="text-7xl mb-5 animate-bounce">{isUpKing ? '👑' : '⚡'}</div>
-          <h2 className={`text-2xl font-black mb-3 ${isUpKing ? 'text-yellow-500' : 'text-blue-500'}`}>
-            {isUpKing ? 'KING VIP activé !' : 'Diambar activé !'}
-          </h2>
-          <p className="text-gray-600 mb-2">Tu es maintenant <span className={`font-bold ${isUpKing ? 'text-yellow-500' : 'text-blue-500'}`}>{isUpKing ? '👑 KING VIP' : '⚡ Diambar'}</span></p>
-          <p className="text-gray-600 mb-2">Ton solde : <span className="font-bold text-orange-500">{newPoints.toLocaleString('fr-FR')} points</span></p>
-          <p className={`text-sm font-semibold mb-6 ${isUpKing ? 'text-yellow-500' : 'text-blue-500'}`}>
-            1 numéro WhatsApp = {newRevealCost.toLocaleString('fr-FR')} pts {isUpKing ? '(tarif KING 👑)' : '(tarif Diambar ⚡)'}
-          </p>
-          <a href="#/recharge" onClick={() => window.location.reload()} className="inline-block bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl transition">
-            💎 Mes Points
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   // Step: Success
   if (step === 'success') {
     const newPoints = getFreePoints();
+    const newReveals = getRevealsFromPoints();
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-4">
         <div className="max-w-sm text-center">
           <div className="text-7xl mb-5 animate-bounce">💎</div>
           <h2 className="text-2xl font-black gradient-text mb-3">Points ajoutés !</h2>
-          <p className="text-gray-600 mb-2">Ton solde est maintenant de <span className="font-bold text-orange-500">{newPoints.toLocaleString('fr-FR')} points</span>.</p>
-          <p className="text-sm text-orange-500 font-semibold mb-6">
-            1 numéro WhatsApp = {revealCost.toLocaleString('fr-FR')} pts {isKing ? '(tarif KING 👑)' : isDiambar ? '(tarif Diambar ⚡)' : ''}
-          </p>
+          <p className="text-gray-600 mb-2">Ton solde : <span className="font-bold text-orange-500">{newPoints.toLocaleString('fr-FR')} points</span> ({newReveals} révélations)</p>
+          <p className="text-sm text-orange-500 font-semibold mb-3">1 numéro WhatsApp = 1 500 pts</p>
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6">
+            <p className="font-bold text-orange-600 text-sm">📢 Les annonces arrivent à tout moment — {vendor.name} — Reste connecté</p>
+          </div>
           <a href="#feed" className="inline-block bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl transition">
             📋 Voir les annonces
           </a>
@@ -315,7 +214,7 @@ export default function RechargePage() {
   return null;
 }
 
-// ── Vendor Register (inline) ──
+// ── Vendor Register ──
 function VendorRegister({ onDone }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');

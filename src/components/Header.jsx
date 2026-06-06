@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser, getFreeVendor, getFreePoints, getRevealsFromPoints } from '../utils/storage';
+import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser, getFreeVendor, getFreePoints } from '../utils/storage';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);

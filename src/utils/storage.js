@@ -8,34 +8,10 @@ export const PRO_URL = 'https://wakhma-pro.lu';
 export const POINTS_PAR_REVELATION = 1500;
 
 export const TARIFS_RECHARGE = [
-  { prix: 1000, points: 900, label: 'Découverte', role: null },
-  { prix: 2000, points: 2000, label: 'Standard', role: null },
-  { prix: 5000, points: 5500, label: 'Pro', role: null },
-  { prix: 8000, points: 9500, label: 'KING VIP', role: 'king' },
-  { prix: 10000, points: 12000, label: 'VIP Max', role: 'king' },
-];
-
-export const ABONNEMENTS = [
-  {
-    role: 'diambar',
-    label: 'Diambar',
-    emoji: '⚡',
-    prix: 5000,
-    points: 5500,
-    revealCost: 1200,
-    color: 'blue',
-    perks: ['1 numéro = 1 200 pts (au lieu de 1 500)', 'Badge ⚡ Diambar', 'Accès prioritaire aux annonces'],
-  },
-  {
-    role: 'king',
-    label: 'KING VIP',
-    emoji: '👑',
-    prix: 8000,
-    points: 9500,
-    revealCost: 1000,
-    color: 'gold',
-    perks: ['1 numéro = 1 000 pts (le meilleur tarif)', 'Badge 👑 KING VIP', 'Accès aux demandes FREE + PRO', 'Thème Gold exclusif'],
-  },
+  { prix: 1000, points: 8000, label: 'Découverte' },
+  { prix: 2000, points: 17000, label: 'Standard' },
+  { prix: 5000, points: 50000, label: 'Pro' },
+  { prix: 10000, points: 105000, label: 'VIP Max' },
 ];
 
 export const URGENCY_OPTIONS = [
@@ -158,19 +134,8 @@ export function addFreePoints(amount) {
   if (v) { v.points = (v.points || 0) + amount; setFreeVendor(v); }
 }
 
-export function getRevealCost(role) {
-  if (role === 'king') return 1000;
-  if (role === 'diambar') return 1200;
-  return POINTS_PAR_REVELATION;
-}
-
-export function getRevealsFromPoints(role) {
-  return Math.floor(getFreePoints() / getRevealCost(role));
-}
-
-export function updateVendorRole(newRole) {
-  const v = getFreeVendor();
-  if (v) { v.role = newRole; setFreeVendor(v); }
+export function getRevealsFromPoints() {
+  return Math.floor(getFreePoints() / POINTS_PAR_REVELATION);
 }
 
 export function generateRef() {

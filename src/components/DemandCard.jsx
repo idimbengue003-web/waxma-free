@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { formatFCFA, timeAgo, maskPhone, URGENCY_OPTIONS, getFreeVendor, getFreePoints, getRevealCost, deductPoints, recordReveal } from '../utils/storage';
+import { formatFCFA, timeAgo, URGENCY_OPTIONS, getFreeVendor, getFreePoints, POINTS_PAR_REVELATION, deductPoints, recordReveal } from '../utils/storage';
 
 export default function DemandCard({ demand }) {
   const urgencyInfo = URGENCY_OPTIONS.find(o => o.value === demand.urgency);
@@ -9,11 +9,10 @@ export default function DemandCard({ demand }) {
 
   const vendor = getFreeVendor();
   const points = getFreePoints();
-  const revealCost = getRevealCost(vendor?.role || 'free');
-  const canReveal = vendor && points >= revealCost;
+  const canReveal = vendor && points >= POINTS_PAR_REVELATION;
 
   const handleReveal = () => {
-    if (deductPoints(revealCost)) {
+    if (deductPoints(POINTS_PAR_REVELATION)) {
       recordReveal(demand.id);
       setRevealed(true);
       setShowConfirm(false);
@@ -82,7 +81,7 @@ export default function DemandCard({ demand }) {
         ) : canReveal ? (
           showConfirm ? (
             <div className="space-y-2">
-              <p className="text-xs text-center text-gray-500">Révéler ce numéro pour <span className="font-bold text-orange-500">{revealCost.toLocaleString('fr-FR')} pts</span> ?</p>
+              <p className="text-xs text-center text-gray-500">Révéler ce numéro pour <span className="font-bold text-orange-500">1 500 pts</span> ?</p>
               <div className="flex gap-2">
                 <button onClick={handleReveal}
                   className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-2.5 rounded-xl text-sm hover:shadow-lg transition">
@@ -98,7 +97,7 @@ export default function DemandCard({ demand }) {
           ) : (
             <button onClick={() => setShowConfirm(true)}
               className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-3 rounded-xl hover:shadow-lg transition text-sm">
-              🔓 Révéler le numéro ({revealCost.toLocaleString('fr-FR')} pts)
+              🔓 Révéler le numéro (1 500 pts)
             </button>
           )
         ) : (
