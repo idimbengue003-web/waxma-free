@@ -7,7 +7,6 @@ export default function Footer() {
           <span className="text-gray-400 text-sm">Le marché rapide de Dakar</span>
         </div>
         <div className="flex items-center gap-6">
-          <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer" className="text-emerald-600 text-sm font-bold hover:underline">Wakhma Pro →</a>
           <span className="text-gray-300 text-xs">© 2024 Wakhma</span>
         </div>
       </div>

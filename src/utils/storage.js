@@ -3,10 +3,59 @@
 // ══════════════════════════════════════════════
 
 export const DEMAND_LIMIT_PER_WEEK = 3;
-export const PRO_URL = 'https://wakhma-pro.lu';
 
-export const POINTS_PAR_REVELATION = 1500;
+// ── Reveal prices by role ──
+export const REVEAL_PRICES = {
+  free: 1500,
+  diambar: 1000,
+  king: 500,
+};
 
+export function getRevealPrice() {
+  const vendor = getFreeVendor();
+  checkSubscriptionExpiration();
+  const role = vendor?.role || 'free';
+  return REVEAL_PRICES[role] || REVEAL_PRICES.free;
+}
+
+// ── Subscription Tiers ──
+export const SUBSCRIPTION_TIERS = [
+  {
+    id: 'diambar',
+    name: 'Diambar',
+    price: 5000,
+    durationDays: 30,
+    revealPrice: 1000,
+    bonusPoints: 30000,
+    badge: '💎',
+    color: 'emerald',
+    features: [
+      'Révélation à 1 000 pts (au lieu de 1 500)',
+      '30 000 points offerts à l\'inscription',
+      'Badge 💎 Diambar sur ton profil',
+      'Annonces visibles en priorité',
+    ],
+  },
+  {
+    id: 'king',
+    name: 'KING VIP',
+    price: 10000,
+    durationDays: 30,
+    revealPrice: 500,
+    bonusPoints: 75000,
+    badge: '⭐',
+    color: 'gold',
+    features: [
+      'Révélation à 500 pts (le meilleur prix !)',
+      '75 000 points offerts à l\'inscription',
+      'Badge ⭐ KING VIP sur ton profil',
+      'Annonces visibles en priorité',
+      'Nom en étoile dans les messages WhatsApp',
+    ],
+  },
+];
+
+// ── Points Recharge Tiers ──
 export const TARIFS_RECHARGE = [
   { prix: 1000, points: 8000, label: 'Découverte' },
   { prix: 2000, points: 17000, label: 'Standard' },
@@ -111,8 +160,7 @@ export function logoutUser() {
   localStorage.removeItem(AUTH_KEY);
 }
 
-// ── Points Storage ──
-const POINTS_KEY = 'wakhma_free_points';
+// ── Vendor / Points Storage ──
 const VENDOR_KEY = 'wakhma_free_vendor';
 
 export function getFreeVendor() {
@@ -135,11 +183,90 @@ export function addFreePoints(amount) {
 }
 
 export function getRevealsFromPoints() {
-  return Math.floor(getFreePoints() / POINTS_PAR_REVELATION);
+  return Math.floor(getFreePoints() / getRevealPrice());
 }
 
 export function generateRef() {
   return 'WKF-' + Date.now().toString(36).toUpperCase();
+}
+
+// ── Subscription Management ──
+export function checkSubscriptionExpiration() {
+  const v = getFreeVendor();
+  if (!v || !v.subscriptionEnd) return;
+
+  const now = new Date();
+  const endDate = new Date(v.subscriptionEnd);
+
+  if (now >= endDate && v.role !== 'free') {
+    // Subscription expired — revert to free but keep points
+    v.role = 'free';
+    v.subscriptionEnd = null;
+    v.subscriptionStart = null;
+    v.subscriptionTier = null;
+    setFreeVendor(v);
+  }
+}
+
+export function activateSubscription(tierId) {
+  const tier = SUBSCRIPTION_TIERS.find(t => t.id === tierId);
+  if (!tier) return false;
+
+  const v = getFreeVendor();
+  if (!v) return false;
+
+  const now = new Date();
+  const endDate = new Date(now.getTime() + tier.durationDays * 24 * 60 * 60 * 1000);
+
+  v.role = tierId; // 'diambar' or 'king'
+  v.subscriptionStart = now.toISOString();
+  v.subscriptionEnd = endDate.toISOString();
+  v.subscriptionTier = tierId;
+  v.points = (v.points || 0) + tier.bonusPoints;
+
+  setFreeVendor(v);
+  return true;
+}
+
+export function getSubscriptionInfo() {
+  checkSubscriptionExpiration();
+  const v = getFreeVendor();
+  if (!v || v.role === 'free') {
+    return { active: false, tier: null, tierName: 'Free', badge: '', daysLeft: 0 };
+  }
+
+  const tier = SUBSCRIPTION_TIERS.find(t => t.id === v.role);
+  if (!tier) return { active: false, tier: null, tierName: 'Free', badge: '', daysLeft: 0 };
+
+  const now = new Date();
+  const endDate = new Date(v.subscriptionEnd);
+  const daysLeft = Math.max(0, Math.ceil((endDate - now) / (24 * 60 * 60 * 1000)));
+
+  return {
+    active: true,
+    tier: v.role,
+    tierName: tier.name,
+    badge: tier.badge,
+    daysLeft,
+    endDate: v.subscriptionEnd,
+    startDate: v.subscriptionStart,
+  };
+}
+
+export function getVendorBadge() {
+  const info = getSubscriptionInfo();
+  return info.active ? info.badge : '';
+}
+
+export function getVendorDisplayName() {
+  const v = getFreeVendor();
+  const info = getSubscriptionInfo();
+  if (!v) return '';
+  const name = v.name || '';
+  if (info.active && info.badge) {
+    return `${info.badge} ${name}`;
+  }
+  return name;
 }
 
 // ── Reveal tracking ──
@@ -180,7 +307,6 @@ export function maskPhone(phone) {
 }
 
 // ── Detect & mask phone numbers in text ──
-// Matches Senegalese phone patterns: 7X XXX XX XX, 7XXXXXXXX, +221 7X..., etc.
 const PHONE_REGEX = /(\+221\s*)?7[0-8](\s?\d){7}/g;
 
 export function containsPhoneInText(text) {
@@ -192,9 +318,7 @@ export function containsPhoneInText(text) {
 export function maskPhonesInText(text) {
   if (!text) return text;
   return text.replace(PHONE_REGEX, (match) => {
-    // Extract just the digits
     const digits = match.replace(/\D/g, '');
-    // Get last 8 digits (the SN number)
     const sn = digits.slice(-8);
     if (sn.length >= 8) {
       return sn.slice(0, 2) + ' ─── ── ' + sn.slice(-2);

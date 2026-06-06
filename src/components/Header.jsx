@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
-import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser, getFreeVendor, getFreePoints } from '../utils/storage';
+import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser, getFreeVendor, getFreePoints, getSubscriptionInfo, getVendorBadge, getRevealPrice } from '../utils/storage';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [limitInfo, setLimitInfo] = useState({ reached: false, count: 0 });
   const [user, setUser] = useState(getUser());
+  const [subInfo, setSubInfo] = useState(getSubscriptionInfo());
 
   useEffect(() => {
     const phone = getStoredPhone();
     if (phone) {
       setLimitInfo({ reached: isLimitReached(phone), count: getWeeklyCount(phone) });
     }
+    setSubInfo(getSubscriptionInfo());
   }, []);
 
   const handleLogout = () => {
@@ -20,6 +22,9 @@ export default function Header() {
   };
 
   const showAdmin = user && user.role === 'admin';
+  const vendor = getFreeVendor();
+  const points = getFreePoints();
+  const badge = getVendorBadge();
 
   return (
     <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 shadow-sm">
@@ -34,12 +39,21 @@ export default function Header() {
         </div>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-7 ml-8">
+        <nav className="hidden md:flex items-center gap-5 ml-8">
           <a href="#/" className="text-gray-600 font-medium hover:text-emerald-600 transition-colors text-sm">Accueil</a>
           <a href="#feed" className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-100 transition">📋 Annonces</a>
           <a href="#/recharge" className="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-100 transition">
-            💎 Points{getFreeVendor() ? ` (${getFreePoints().toLocaleString('fr-FR')})` : ''}
+            💎 Points{vendor ? ` (${points.toLocaleString('fr-FR')})` : ''}
           </a>
+          {subInfo.active && (
+            <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
+              subInfo.tier === 'king'
+                ? 'bg-yellow-50 text-yellow-600 border border-yellow-300'
+                : 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+            }`}>
+              {subInfo.badge} {subInfo.tierName} · {subInfo.daysLeft}j
+            </span>
+          )}
           <a href="#post" className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-emerald-500/20 transition-all text-sm">
             Déposer annonce
           </a>
@@ -50,10 +64,6 @@ export default function Header() {
               {limitInfo.count}/{DEMAND_LIMIT_PER_WEEK} cette semaine
             </span>
           )}
-          <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-100 transition">
-            Vendeur ? → PRO
-          </a>
           {showAdmin ? (
             <>
               <a href="#/admin" className="text-emerald-600 font-bold text-sm px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition">
@@ -92,10 +102,19 @@ export default function Header() {
         <span className="text-emerald-600 font-semibold">Gratos.</span>
       </div>
 
+      {subInfo.active && subInfo.daysLeft <= 5 && (
+        <div className={`border-b text-center py-2.5 text-xs font-semibold ${
+          subInfo.daysLeft <= 2
+            ? 'bg-red-50 border-red-200 text-red-500'
+            : 'bg-yellow-50 border-yellow-200 text-yellow-600'
+        }`}>
+          {subInfo.badge} Abonnement {subInfo.tierName} expire dans {subInfo.daysLeft} jour{subInfo.daysLeft > 1 ? 's' : ''} — <a href="#/recharge" className="underline font-bold">Renouveler</a>
+        </div>
+      )}
+
       {limitInfo.reached && (
         <div className="bg-red-50 border-b border-red-200 text-red-500 text-center py-3 text-xs font-semibold">
-          Limite 3/sem atteinte, revenez lundi. Passe sur{' '}
-          <a href="https://wakhma-pro.lu" className="underline font-bold hover:text-red-700">Wakhma Pro</a>
+          Limite {DEMAND_LIMIT_PER_WEEK}/sem atteinte, revenez lundi.
         </div>
       )}
 
@@ -104,24 +123,28 @@ export default function Header() {
           <nav className="flex flex-col p-6 gap-3">
             <a href="#/" onClick={() => setMenuOpen(false)} className="text-gray-600 font-medium py-3 px-5 rounded-xl hover:bg-gray-50 transition text-sm">🏠 Accueil</a>
             <a href="#feed" onClick={() => setMenuOpen(false)} className="text-gray-600 font-medium py-3 px-5 rounded-xl hover:bg-gray-50 transition text-sm">📋 Annonces</a>
-            <a href="#/recharge" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-emerald-700 font-bold py-3 px-5 rounded-xl bg-emerald-50 border border-emerald-200 text-sm">💎 Acheter des points</a>
+            <a href="#/recharge" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-emerald-700 font-bold py-3 px-5 rounded-xl bg-emerald-50 border border-emerald-200 text-sm">💎 Acheter des points / S'abonner</a>
             <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">✏️ Déposer annonce</a>
 
-            <div className="rounded-xl p-4 mt-1 bg-blue-50 border border-blue-200">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg">💡</span>
-                <span className="font-bold text-sm text-blue-600">Tu es vendeur ?</span>
+            {subInfo.active && (
+              <div className={`rounded-xl p-4 mt-1 border ${
+                subInfo.tier === 'king'
+                  ? 'bg-yellow-50 border-yellow-200'
+                  : 'bg-emerald-50 border-emerald-200'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">{subInfo.badge}</span>
+                  <span className={`font-bold text-sm ${subInfo.tier === 'king' ? 'text-yellow-600' : 'text-emerald-600'}`}>
+                    {subInfo.tierName}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500">Expire dans {subInfo.daysLeft} jour{subInfo.daysLeft > 1 ? 's' : ''} · Révélation à {getRevealPrice().toLocaleString('fr-FR')} pts</p>
               </div>
-              <p className="text-xs text-gray-500 mb-3">Sur Wakhma PRO, achète des points A PARTIR DE 1000F pour révéler les numéros WhatsApp des clients.</p>
-              <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
-                className="block text-center bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-3 px-4 rounded-xl text-sm">
-                Vendeur ? → Wakhma PRO
-              </a>
-            </div>
+            )}
 
             {limitInfo.reached && (
               <div className="bg-red-50 text-red-500 font-bold py-3 px-5 rounded-xl text-center text-sm border border-red-200">
-                Limite 3/sem atteinte → Wakhma Pro
+                Limite {DEMAND_LIMIT_PER_WEEK}/sem atteinte
               </div>
             )}
 

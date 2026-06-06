@@ -99,9 +99,9 @@ function Home({ onPosted }) {
           <h2 className="text-3xl font-black text-center text-gray-900 mb-12">Comment ça marche ?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { emoji: '📝', title: '1. Poste ta demande', desc: 'Décris ce que tu cherches : téléphone, clim, frigo... Dis ton budget et ton quartier.' },
-              { emoji: '👀', title: '2. Les vendeurs voient', desc: 'Les vendeurs PRO consultent ta demande et décident de te contacter.' },
-              { emoji: '💬', title: '3. Reçois sur WhatsApp', desc: 'Un vendeur t\'écrit directement sur WhatsApp. Tu négocies, tu choisis.' },
+              { emoji: '📝', title: '1. Poste ta demande', desc: 'Décris ce que tu cherches : téléphone, clim, frigo... Dis ton budget et ton quartier. C\'est gratuit !' },
+              { emoji: '👀', title: '2. Les vendeurs voient', desc: 'Les vendeurs consultent ta demande et décident de te contacter en achetant des points.' },
+              { emoji: '💬', title: '3. Reçois sur WhatsApp', desc: 'Un vendeur t\'écrit directement sur WhatsApp. Tu négocies, tu choisis le meilleur prix.' },
             ].map(step => (
               <div key={step.title} className="bg-white rounded-2xl p-8 text-center shadow-lg card-hover">
                 <div className="text-5xl mb-4">{step.emoji}</div>
@@ -117,10 +117,10 @@ function Home({ onPosted }) {
       <section className="py-16 px-4 bg-wakhma-primary">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-black text-white mb-4">Tu es vendeur ?</h2>
-          <p className="text-wakhma-muted mb-8">Sur Wakhma PRO, accède aux demandes des clients et révèle leurs numéros WhatsApp pour les contacter directement.</p>
-          <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer"
+          <p className="text-wakhma-muted mb-8">Achète des points et révèle les numéros WhatsApp des clients pour les contacter directement. Abonne-toi pour des prix réduits !</p>
+          <a href="#/recharge"
             className="inline-block bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl transition-all text-lg">
-            Wakhma PRO →
+            💎 Acheter des points / S'abonner
           </a>
         </div>
       </section>
