@@ -23,12 +23,12 @@ export default function Header() {
 
   return (
     <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 shadow-sm">
-      <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between gap-8">
-        <div className="flex items-center gap-4">
-          <a href="#/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white font-extrabold text-xl px-5 py-2.5 rounded-xl tracking-tight shadow-md shadow-emerald-500/20 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/30 transition-shadow">
+      <div className="max-w-6xl mx-auto px-4 md:px-8 py-3 md:py-4 flex items-center justify-between gap-4 md:gap-8">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
+          <a href="#/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white font-extrabold text-lg md:text-xl px-3 md:px-5 py-2 md:py-2.5 rounded-xl tracking-tight shadow-md shadow-emerald-500/20 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/30 transition-shadow">
             Wakhma
           </a>
-          <span className="text-emerald-600 font-bold text-xs bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 uppercase tracking-wider">
+          <span className="text-emerald-600 font-bold text-[10px] md:text-xs bg-emerald-50 px-2 md:px-3 py-1 md:py-1.5 rounded-lg border border-emerald-200 uppercase tracking-wider">
             Free
           </span>
         </div>
@@ -71,14 +71,14 @@ export default function Header() {
         </nav>
 
         {/* Mobile buttons */}
-        <div className="md:hidden flex items-center gap-3">
-          <a href="#feed" className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-bold">
-            📋 Annonces
+        <div className="md:hidden flex items-center gap-1.5">
+          <a href="#feed" className="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1.5 rounded-lg text-[11px] font-bold">
+            📋
           </a>
-          <a href="#/recharge" className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-bold">
-            💎 Points
+          <a href="#/recharge" className="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1.5 rounded-lg text-[11px] font-bold">
+            💎
           </a>
-          <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600 p-2" aria-label="Menu">
+          <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600 p-1.5" aria-label="Menu">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               {menuOpen ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />}
