@@ -1,5 +1,23 @@
-// Wakhma FREE — Post Demand API
-let demands = [];
+// Wakhma FREE — Post Demand API (persistent JSON file)
+import fs from 'fs';
+import path from 'path';
+
+const DATA_FILE = path.join('/tmp', 'wakhma-free-demandes.json');
+
+function readDemands() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    }
+  } catch {}
+  return [];
+}
+
+function writeDemands(demands) {
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(demands.slice(0, 500)));
+  } catch {}
+}
 
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,9 +38,10 @@ export default function handler(req, res) {
     demand.status = demand.status || 'active';
     demand.source = 'free';
 
+    let demands = readDemands();
     demands.unshift(demand);
-    // Keep max 500
     if (demands.length > 500) demands = demands.slice(0, 500);
+    writeDemands(demands);
 
     res.status(200).json({ success: true, demand });
   } catch (err) {

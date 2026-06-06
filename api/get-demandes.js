@@ -1,14 +1,33 @@
-// Wakhma FREE — Get Demands API
-let demands = [];
+// Wakhma FREE — Get Demands API (persistent JSON file)
+import fs from 'fs';
+import path from 'path';
+
+const DATA_FILE = path.join('/tmp', 'wakhma-free-demandes.json');
+
+function readDemands() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    }
+  } catch {}
+  return [];
+}
+
+function writeDemands(demands) {
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(demands.slice(0, 500)));
+  } catch {}
+}
 
 export default function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // Accept POST from post-demande to share data
+  let demands = readDemands();
+
   if (req.method === 'POST') {
     const demand = req.body;
     demand.id = demand.id || 'DEM-' + Date.now().toString(36).toUpperCase();
@@ -17,6 +36,7 @@ export default function handler(req, res) {
     demand.source = 'free';
     demands.unshift(demand);
     if (demands.length > 500) demands = demands.slice(0, 500);
+    writeDemands(demands);
     return res.status(200).json({ success: true, demand });
   }
 
