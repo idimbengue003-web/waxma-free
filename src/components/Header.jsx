@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser } from '../utils/storage';
+import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser, getFreeVendor, getFreePoints, getRevealsFromPoints } from '../utils/storage';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,6 +37,9 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-6">
           <a href="#/" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">Accueil</a>
           <a href="#feed" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">📋 Annonces</a>
+          <a href="#/recharge" className="flex items-center gap-2 bg-orange-500/10 text-orange-400 border border-orange-500/20 px-4 py-2 rounded-xl text-sm font-bold hover:bg-orange-500/20 transition">
+            💎 Points{getFreeVendor() ? ` (${getFreePoints().toLocaleString('fr-FR')})` : ''}
+          </a>
           <a href="#post" className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-wakhma-highlight/20 transition-all animate-pulse-glow text-sm">
             Déposer annonce
           </a>
@@ -72,6 +75,9 @@ export default function Header() {
           <a href="#feed" className="flex items-center gap-1.5 bg-wakhma-highlight/10 text-wakhma-highlight border border-wakhma-highlight/20 px-3 py-1.5 rounded-lg text-xs font-bold">
             📋 Annonces
           </a>
+          <a href="#/recharge" className="flex items-center gap-1.5 bg-orange-500/10 text-orange-400 border border-orange-500/20 px-3 py-1.5 rounded-lg text-xs font-bold">
+            💎 Points
+          </a>
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-wakhma-text p-2" aria-label="Menu">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               {menuOpen ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -98,6 +104,7 @@ export default function Header() {
           <nav className="flex flex-col p-6 gap-3">
             <a href="#/" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">🏠 Accueil</a>
             <a href="#feed" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">📋 Annonces</a>
+            <a href="#/recharge" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-orange-400 font-bold py-3 px-5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-sm">💎 Acheter des points</a>
             <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">✏️ Déposer annonce</a>
 
             <div className="rounded-xl p-4 mt-1 bg-wakhma-highlight/5 border border-wakhma-highlight/15">

@@ -5,6 +5,39 @@
 export const DEMAND_LIMIT_PER_WEEK = 3;
 export const PRO_URL = 'https://wakhma-pro.lu';
 
+export const POINTS_PAR_REVELATION = 1500;
+
+export const TARIFS_RECHARGE = [
+  { prix: 1000, points: 900, label: 'Découverte', role: null },
+  { prix: 2000, points: 2000, label: 'Standard', role: null },
+  { prix: 5000, points: 5500, label: 'Pro', role: null },
+  { prix: 8000, points: 9500, label: 'KING VIP', role: 'king' },
+  { prix: 10000, points: 12000, label: 'VIP Max', role: 'king' },
+];
+
+export const ABONNEMENTS = [
+  {
+    role: 'diambar',
+    label: 'Diambar',
+    emoji: '⚡',
+    prix: 5000,
+    points: 5500,
+    revealCost: 1200,
+    color: 'blue',
+    perks: ['1 numéro = 1 200 pts (au lieu de 1 500)', 'Badge ⚡ Diambar', 'Accès prioritaire aux annonces'],
+  },
+  {
+    role: 'king',
+    label: 'KING VIP',
+    emoji: '👑',
+    prix: 8000,
+    points: 9500,
+    revealCost: 1000,
+    color: 'gold',
+    perks: ['1 numéro = 1 000 pts (le meilleur tarif)', 'Badge 👑 KING VIP', 'Accès aux demandes FREE + PRO', 'Thème Gold exclusif'],
+  },
+];
+
 export const URGENCY_OPTIONS = [
   { value: 'urgent', label: '🔥 Urgent', desc: 'J\'en ai besoin tout de suite' },
   { value: '2jours', label: '⏳ Dans 2 jours', desc: 'J\'en ai besoin sous 2 jours' },
@@ -100,6 +133,63 @@ export function loginAdmin(password) {
 
 export function logoutUser() {
   localStorage.removeItem(AUTH_KEY);
+}
+
+// ── Points Storage ──
+const POINTS_KEY = 'wakhma_free_points';
+const VENDOR_KEY = 'wakhma_free_vendor';
+
+export function getFreeVendor() {
+  try { return JSON.parse(localStorage.getItem(VENDOR_KEY) || 'null'); }
+  catch { return null; }
+}
+
+export function setFreeVendor(v) {
+  localStorage.setItem(VENDOR_KEY, JSON.stringify(v));
+}
+
+export function getFreePoints() {
+  const v = getFreeVendor();
+  return v ? (v.points || 0) : 0;
+}
+
+export function addFreePoints(amount) {
+  const v = getFreeVendor();
+  if (v) { v.points = (v.points || 0) + amount; setFreeVendor(v); }
+}
+
+export function getRevealCost(role) {
+  if (role === 'king') return 1000;
+  if (role === 'diambar') return 1200;
+  return POINTS_PAR_REVELATION;
+}
+
+export function getRevealsFromPoints(role) {
+  return Math.floor(getFreePoints() / getRevealCost(role));
+}
+
+export function updateVendorRole(newRole) {
+  const v = getFreeVendor();
+  if (v) { v.role = newRole; setFreeVendor(v); }
+}
+
+export function generateRef() {
+  return 'WKF-' + Date.now().toString(36).toUpperCase();
+}
+
+// ── Reveal tracking ──
+const REVEALS_KEY = 'wakhma_free_reveals';
+
+export function recordReveal(demandId) {
+  const reveals = JSON.parse(localStorage.getItem(REVEALS_KEY) || '[]');
+  reveals.push({ demandId, date: new Date().toISOString() });
+  localStorage.setItem(REVEALS_KEY, JSON.stringify(reveals));
+}
+
+export function deductPoints(amount) {
+  const v = getFreeVendor();
+  if (v && (v.points || 0) >= amount) { v.points -= amount; setFreeVendor(v); return true; }
+  return false;
 }
 
 // ── Helpers ──

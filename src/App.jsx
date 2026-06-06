@@ -6,6 +6,7 @@ import DemandForm from './components/DemandForm';
 import DemandFeed from './components/DemandFeed';
 import Admin from './components/Admin';
 import LoginPage from './components/LoginPage';
+import RechargePage from './components/RechargePage';
 import { isAdmin } from './utils/storage';
 
 function getRoute() {
@@ -44,6 +45,7 @@ export default function App() {
           );
         }
         return <Admin />;
+      case 'recharge': return <RechargePage />;
       case 'login': return <LoginPage onLogin={() => setAuthVersion(v => v + 1)} />;
       default: return <Home onPosted={setNewDemand} />;
     }
