@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200 shadow-sm">
-      <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-8 py-4 flex items-center justify-between gap-8">
         <div className="flex items-center gap-4">
           <a href="#/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white font-extrabold text-xl px-5 py-2.5 rounded-xl tracking-tight shadow-md shadow-emerald-500/20 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/30 transition-shadow">
             Wakhma
@@ -34,9 +34,9 @@ export default function Header() {
         </div>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-7">
+        <nav className="hidden md:flex items-center gap-7 ml-8">
           <a href="#/" className="text-gray-600 font-medium hover:text-emerald-600 transition-colors text-sm">Accueil</a>
-          <a href="#feed" className="text-gray-600 font-medium hover:text-emerald-600 transition-colors text-sm">📋 Annonces</a>
+          <a href="#feed" className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-100 transition">📋 Annonces</a>
           <a href="#/recharge" className="flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-100 transition">
             💎 Points{getFreeVendor() ? ` (${getFreePoints().toLocaleString('fr-FR')})` : ''}
           </a>
