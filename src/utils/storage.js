@@ -5,6 +5,13 @@
 export const DEMAND_LIMIT_PER_WEEK = 3;
 export const PRO_URL = 'https://wakhma-pro.lu';
 
+export const URGENCY_OPTIONS = [
+  { value: 'urgent', label: '🔥 Urgent', desc: 'J\'en ai besoin tout de suite' },
+  { value: '2jours', label: '⏳ Dans 2 jours', desc: 'J\'en ai besoin sous 2 jours' },
+  { value: '1semaine', label: '📅 Dans 1 semaine', desc: 'J\'en ai besoin sous 1 semaine' },
+  { value: 'flexible', label: '😊 Flexible', desc: 'Pas de pressing' },
+];
+
 export const CATEGORIES = [
   'Téléphones', 'TV & Écrans', 'Frigo & Congélateur', 'Climatiseur & Ventilateur',
   'Ordinateurs', 'Tablettes', 'Audio & Son', 'Électroménager', 'Plomberie',

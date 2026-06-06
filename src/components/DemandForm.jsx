@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { CATEGORIES, QUARTIERS, generateId, saveDemandLocal, isLimitReached, incrementWeeklyCount, getStoredPhone, setStoredPhone, DEMAND_LIMIT_PER_WEEK } from '../utils/storage';
+import { CATEGORIES, QUARTIERS, URGENCY_OPTIONS, generateId, saveDemandLocal, isLimitReached, incrementWeeklyCount, getStoredPhone, setStoredPhone, DEMAND_LIMIT_PER_WEEK } from '../utils/storage';
 
 export default function DemandForm({ onPosted }) {
   const [form, setForm] = useState({
-    category: '', title: '', description: '', budget: '', whatsapp: getStoredPhone(), quartier: '', photo: null,
+    category: '', title: '', description: '', budget: '', whatsapp: getStoredPhone(), quartier: '', photo: null, urgency: '',
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -42,12 +42,13 @@ export default function DemandForm({ onPosted }) {
     const demand = {
       id: generateId(),
       category: form.category.trim() || 'Autre',
-      title: form.title.trim(),
+      title: 'Je cherche ' + form.title.trim(),
       description: form.description.trim(),
       budget: parseInt(form.budget) || 0,
       photo: form.photo,
       whatsapp: form.whatsapp.trim(),
       quartier: form.quartier.trim(),
+      urgency: form.urgency || '',
       createdAt: new Date().toISOString(),
       status: 'active',
       source: 'free',
@@ -90,7 +91,7 @@ export default function DemandForm({ onPosted }) {
     <div className="py-12 px-4">
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black gradient-text">Poster une demande</h1>
+          <h1 className="text-3xl font-black gradient-text">Je cherche...</h1>
           <p className="text-wakhma-muted mt-2">Décris ce que tu cherches, les vendeurs te trouvent.</p>
         </div>
 
@@ -108,16 +109,36 @@ export default function DemandForm({ onPosted }) {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-2">Titre *</label>
-            <input type="text" name="title" value={form.title} onChange={handleChange}
-              placeholder="Ex: iPhone 15 Pro Max, Clim 12000 BTU..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" required />
+            <label className="block text-sm font-semibold text-gray-800 mb-2">Je cherche... *</label>
+            <div className="flex items-center gap-0">
+              <span className="bg-wakhma-highlight/10 text-wakhma-highlight font-bold text-sm px-4 py-3 rounded-l-xl border-2 border-r-0 border-gray-200 whitespace-nowrap">Je cherche</span>
+              <input type="text" name="title" value={form.title} onChange={handleChange}
+                placeholder="iPhone 15 Pro Max, Clim 12000 BTU..."
+                className="w-full px-4 py-3 rounded-r-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" required />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-2">Urgence *</label>
+            <div className="grid grid-cols-2 gap-2">
+              {URGENCY_OPTIONS.map(opt => (
+                <button key={opt.value} type="button" onClick={() => setForm(f => ({ ...f, urgency: f.urgency === opt.value ? '' : opt.value }))}
+                  className={`text-left p-3 rounded-xl border-2 transition text-sm ${
+                    form.urgency === opt.value
+                      ? 'border-wakhma-highlight bg-wakhma-highlight/5 ring-2 ring-wakhma-highlight/20'
+                      : 'border-gray-200 hover:border-wakhma-highlight/30'
+                  }`}>
+                  <div className="font-bold text-sm">{opt.label}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">{opt.desc}</div>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">Description *</label>
             <textarea name="description" value={form.description} onChange={handleChange} rows={3}
-              placeholder="Décris ce que tu cherches en détail..."
+              placeholder="Décris ce que tu cherches en détail (modèle, état, couleur...)..."
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm resize-none" required />
           </div>
 
@@ -153,7 +174,7 @@ export default function DemandForm({ onPosted }) {
 
           <button type="submit" disabled={loading}
             className="w-full bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-wakhma-highlight/20 transition disabled:opacity-60 text-sm">
-            {loading ? 'Envoi...' : 'Poster ma demande'}
+            {loading ? 'Envoi...' : '🔍 Je cherche'}
           </button>
 
           <p className="text-xs text-gray-400 text-center">Limite : {DEMAND_LIMIT_PER_WEEK} demandes par semaine par numéro WhatsApp</p>
