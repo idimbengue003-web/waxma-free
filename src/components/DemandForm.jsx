@@ -1,17 +1,22 @@
 import { useState } from 'react';
-import { CATEGORIES, QUARTIERS, URGENCY_OPTIONS, generateId, saveDemandLocal, isLimitReached, incrementWeeklyCount, getStoredPhone, setStoredPhone, DEMAND_LIMIT_PER_WEEK } from '../utils/storage';
+import { CATEGORIES, QUARTIERS, URGENCY_OPTIONS, generateId, saveDemandLocal, isLimitReached, incrementWeeklyCount, getStoredPhone, setStoredPhone, DEMAND_LIMIT_PER_WEEK, containsPhoneInText } from '../utils/storage';
 
 export default function DemandForm({ onPosted }) {
   const [form, setForm] = useState({
     category: '', title: '', description: '', budget: '', whatsapp: getStoredPhone(), quartier: '', photo: null, urgency: '',
   });
   const [error, setError] = useState('');
+  const [phoneWarning, setPhoneWarning] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(f => ({ ...f, [name]: value }));
+    // Check if user is typing a phone number in title/description
+    if (name === 'title' || name === 'description') {
+      setPhoneWarning(containsPhoneInText(value));
+    }
   };
 
   const handlePhoto = (e) => {
@@ -29,6 +34,11 @@ export default function DemandForm({ onPosted }) {
 
     if (!form.title.trim()) { setError('Titre obligatoire'); return; }
     if (!form.description.trim()) { setError('Description obligatoire'); return; }
+    // Block phone numbers in title/description
+    if (containsPhoneInText(form.title) || containsPhoneInText(form.description)) {
+      setError('Tu ne peux pas mettre ton numéro dans le titre ou la description ! Les vendeurs te contacteront via WhatsApp après révélation.');
+      return;
+    }
     if (!form.whatsapp.trim() || form.whatsapp.trim().length < 9) { setError('Numéro WhatsApp valide obligatoire'); return; }
     if (!/^7[0-8]\d{7}$/.test(form.whatsapp.trim())) { setError('Numéro WhatsApp invalide (format 77/78/76/70...)'); return; }
 
@@ -107,6 +117,16 @@ export default function DemandForm({ onPosted }) {
               {CATEGORIES.map(c => <option key={c} value={c} />)}
             </datalist>
           </div>
+
+          {phoneWarning && (
+            <div className="bg-orange-50 border-2 border-orange-300 text-orange-700 p-4 rounded-xl text-sm font-medium flex items-start gap-2">
+              <span className="text-lg">🚫</span>
+              <div>
+                <p className="font-bold">Pas de numéro ici !</p>
+                <p className="text-xs text-orange-600 mt-1">Les vendeurs te contactent via Wakhma. Ne mets pas ton numéro dans le texte.</p>
+              </div>
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">Je cherche... *</label>

@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { formatFCFA, timeAgo, URGENCY_OPTIONS, getFreeVendor, getFreePoints, POINTS_PAR_REVELATION, deductPoints, recordReveal } from '../utils/storage';
+import { formatFCFA, timeAgo, URGENCY_OPTIONS, getFreeVendor, getFreePoints, POINTS_PAR_REVELATION, deductPoints, recordReveal, maskPhonesInText } from '../utils/storage';
 
 export default function DemandCard({ demand }) {
   const urgencyInfo = URGENCY_OPTIONS.find(o => o.value === demand.urgency);
-  const displayTitle = demand.title.replace(/^Je cherche\s*/i, '');
+  const displayTitle = maskPhonesInText(demand.title.replace(/^Je cherche\s*/i, ''));
+  const displayDescription = maskPhonesInText(demand.description);
   const [revealed, setRevealed] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -60,7 +61,7 @@ export default function DemandCard({ demand }) {
 
         {/* DESCRIPTION 2 lignes max */}
         <p className="text-sm text-gray-600 line-clamp-2 mb-3">
-          {demand.description}
+          {displayDescription}
         </p>
 
         {/* QUARTIER + DATE */}
