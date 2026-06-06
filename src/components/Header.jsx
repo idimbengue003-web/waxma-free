@@ -36,7 +36,7 @@ export default function Header() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
           <a href="#/" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">Accueil</a>
-          <a href="#feed" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">Catégories</a>
+          <a href="#feed" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">📋 Annonces</a>
           <a href="#post" className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-wakhma-highlight/20 transition-all animate-pulse-glow text-sm">
             Déposer annonce
           </a>
@@ -67,11 +67,10 @@ export default function Header() {
           )}
         </nav>
 
-        {/* Mobile */}
+        {/* Mobile buttons */}
         <div className="md:hidden flex items-center gap-3">
-          <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 bg-wakhma-highlight/10 text-wakhma-highlight border border-wakhma-highlight/20 px-3 py-1.5 rounded-lg text-xs font-bold">
-            Vendeur → PRO
+          <a href="#feed" className="flex items-center gap-1.5 bg-wakhma-highlight/10 text-wakhma-highlight border border-wakhma-highlight/20 px-3 py-1.5 rounded-lg text-xs font-bold">
+            📋 Annonces
           </a>
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-wakhma-text p-2" aria-label="Menu">
             <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -97,9 +96,9 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-wakhma-secondary border-t border-wakhma-accent/20 animate-fade-in-up">
           <nav className="flex flex-col p-6 gap-3">
-            <a href="#/" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">Accueil</a>
-            <a href="#feed" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">Catégories</a>
-            <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">Déposer annonce</a>
+            <a href="#/" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">🏠 Accueil</a>
+            <a href="#feed" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">📋 Annonces</a>
+            <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">✏️ Déposer annonce</a>
 
             <div className="rounded-xl p-4 mt-1 bg-wakhma-highlight/5 border border-wakhma-highlight/15">
               <div className="flex items-center gap-2 mb-2">
