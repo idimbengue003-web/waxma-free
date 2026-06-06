@@ -36,7 +36,7 @@ export default function DemandFeed() {
     <div className="py-10 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-2xl font-extrabold gradient-text">Demandes récentes</h2>
+          <h2 className="text-2xl font-extrabold gradient-text">Annonces récentes</h2>
           <p className="text-wakhma-muted mt-1 text-sm">Les acheteurs cherchent, les vendeurs trouvent.</p>
         </div>
 
@@ -56,8 +56,8 @@ export default function DemandFeed() {
             <button key={cat} onClick={() => setSelectedCat(cat)}
               className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition ${
                 selectedCat === cat
-                  ? 'bg-wakhma-highlight text-white shadow-lg shadow-wakhma-highlight/20'
-                  : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-wakhma-highlight/30'
+                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                  : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-orange-400/30'
               }`}>
               {cat}
             </button>
@@ -65,19 +65,19 @@ export default function DemandFeed() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
             {filtered.map(d => <DemandCard key={d.id} demand={d} />)}
           </div>
         ) : (
           <div className="text-center py-20">
             <div className="text-6xl mb-5">📋</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-3">Aucune demande</h3>
-            <p className="text-gray-500">Les demandes apparaîtront ici quand des clients posteront.</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-3">Aucune annonce</h3>
+            <p className="text-gray-500">Les annonces apparaîtront ici quand des clients posteront.</p>
           </div>
         )}
 
         {filtered.length > 0 && (
-          <p className="text-center text-xs text-gray-400 mt-8">{filtered.length} demande{filtered.length > 1 ? 's' : ''}</p>
+          <p className="text-center text-xs text-gray-400 mt-8">{filtered.length} annonce{filtered.length > 1 ? 's' : ''}</p>
         )}
       </div>
     </div>
