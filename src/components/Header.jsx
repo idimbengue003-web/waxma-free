@@ -105,7 +105,7 @@ export default function Header() {
                 <span className="text-lg">💡</span>
                 <span className="font-bold text-sm text-wakhma-highlight">Tu es vendeur ?</span>
               </div>
-              <p className="text-xs text-wakhma-muted mb-3">Sur Wakhma PRO, achète des points pour révéler les numéros WhatsApp des clients.</p>
+              <p className="text-xs text-wakhma-muted mb-3">Sur Wakhma PRO, achète des points A PARTIR DE 1000F pour révéler les numéros WhatsApp des clients.</p>
               <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
                 className="block text-center bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-3 px-4 rounded-xl text-sm">
                 Vendeur ? → Wakhma PRO
