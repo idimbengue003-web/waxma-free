@@ -25,7 +25,7 @@ export default function Header() {
     <header className="bg-wakhma-primary/95 backdrop-blur-md sticky top-0 z-50 border-b border-wakhma-accent/20">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <a href="#/" className="bg-gradient-to-br from-wakhma-highlight to-emerald-600 text-white font-extrabold text-xl px-4 py-2 rounded-xl tracking-tight shadow-lg shadow-wakhma-highlight/20">
+          <a href="#/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-gradient-to-br from-wakhma-highlight to-emerald-600 text-white font-extrabold text-xl px-4 py-2 rounded-xl tracking-tight shadow-lg shadow-wakhma-highlight/20 cursor-pointer">
             Wakhma
           </a>
           <span className="text-wakhma-highlight font-bold text-xs bg-wakhma-highlight/10 px-3 py-1 rounded-lg border border-wakhma-highlight/20 uppercase tracking-wider">
