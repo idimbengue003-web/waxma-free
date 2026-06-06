@@ -32,9 +32,9 @@ export default function Admin() {
         <div className="w-full max-w-sm">
           <form onSubmit={handleLogin} className="bg-white rounded-2xl shadow-lg p-6 space-y-4">
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mot de passe admin" className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" />
+              placeholder="Mot de passe admin" className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" />
             <button type="submit" disabled={loading}
-              className="w-full bg-waxma-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition">
+              className="w-full bg-wakhma-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition">
               Connexion
             </button>
           </form>
@@ -47,8 +47,8 @@ export default function Admin() {
     <div className="py-6 px-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-extrabold text-gray-800">Admin WAXMA Free</h1>
-          <button onClick={loadDemands} className="text-sm text-waxma-highlight font-semibold hover:underline">Rafraîchir</button>
+          <h1 className="text-2xl font-extrabold text-gray-800">Admin Wakhma Free</h1>
+          <button onClick={loadDemands} className="text-sm text-wakhma-highlight font-semibold hover:underline">Rafraîchir</button>
         </div>
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <div className="p-4 border-b"><h2 className="font-bold text-gray-800">Demandes ({demands.length})</h2></div>

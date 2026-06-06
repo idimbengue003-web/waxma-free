@@ -1,4 +1,4 @@
-// WAXMA FREE — Get Demands API
+// Wakhma FREE — Get Demands API
 let demands = [];
 
 export default function handler(req, res) {

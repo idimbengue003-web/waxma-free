@@ -77,8 +77,8 @@ export default function DemandForm({ onPosted }) {
         <div className="max-w-sm text-center">
           <div className="text-6xl mb-5">✅</div>
           <h2 className="text-2xl font-black gradient-text mb-3">Demande postée !</h2>
-          <p className="text-waxma-muted mb-6">Les vendeurs te contacteront sur WhatsApp.</p>
-          <a href="#feed" className="inline-block bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold px-8 py-3.5 rounded-xl hover:shadow-lg transition">
+          <p className="text-wakhma-muted mb-6">Les vendeurs te contacteront sur WhatsApp.</p>
+          <a href="#feed" className="inline-block bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-8 py-3.5 rounded-xl hover:shadow-lg transition">
             Voir les demandes
           </a>
         </div>
@@ -91,7 +91,7 @@ export default function DemandForm({ onPosted }) {
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-black gradient-text">Poster une demande</h1>
-          <p className="text-waxma-muted mt-2">Décris ce que tu cherches, les vendeurs te trouvent.</p>
+          <p className="text-wakhma-muted mt-2">Décris ce que tu cherches, les vendeurs te trouvent.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 space-y-5">
@@ -101,7 +101,7 @@ export default function DemandForm({ onPosted }) {
             <label className="block text-sm font-semibold text-gray-800 mb-2">Catégorie</label>
             <input type="text" name="category" value={form.category} onChange={handleChange}
               list="cat-suggestions" placeholder="Ex: Téléphones, Clim, Frigo..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" />
             <datalist id="cat-suggestions">
               {CATEGORIES.map(c => <option key={c} value={c} />)}
             </datalist>
@@ -111,28 +111,28 @@ export default function DemandForm({ onPosted }) {
             <label className="block text-sm font-semibold text-gray-800 mb-2">Titre *</label>
             <input type="text" name="title" value={form.title} onChange={handleChange}
               placeholder="Ex: iPhone 15 Pro Max, Clim 12000 BTU..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" required />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" required />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">Description *</label>
             <textarea name="description" value={form.description} onChange={handleChange} rows={3}
               placeholder="Décris ce que tu cherches en détail..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm resize-none" required />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm resize-none" required />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">Budget (FCFA)</label>
             <input type="number" name="budget" value={form.budget} onChange={handleChange}
               placeholder="Ex: 850000"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">Quartier (Dakar)</label>
             <input type="text" name="quartier" value={form.quartier} onChange={handleChange}
               list="quartier-suggestions" placeholder="Ex: Almadies, Médina..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" />
             <datalist id="quartier-suggestions">
               {QUARTIERS.map(q => <option key={q} value={q} />)}
             </datalist>
@@ -142,17 +142,17 @@ export default function DemandForm({ onPosted }) {
             <label className="block text-sm font-semibold text-gray-800 mb-2">WhatsApp *</label>
             <input type="tel" name="whatsapp" value={form.whatsapp} onChange={handleChange}
               placeholder="77 000 00 00"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" required />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" required />
           </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-2">Photo (optionnel, max 2 Mo)</label>
             <input type="file" accept="image/*" onChange={handlePhoto}
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm" />
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm" />
           </div>
 
           <button type="submit" disabled={loading}
-            className="w-full bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-waxma-highlight/20 transition disabled:opacity-60 text-sm">
+            className="w-full bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-wakhma-highlight/20 transition disabled:opacity-60 text-sm">
             {loading ? 'Envoi...' : 'Poster ma demande'}
           </button>
 

@@ -37,7 +37,7 @@ export default function DemandFeed() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h2 className="text-2xl font-extrabold gradient-text">Demandes récentes</h2>
-          <p className="text-waxma-muted mt-1 text-sm">Les acheteurs cherchent, les vendeurs trouvent.</p>
+          <p className="text-wakhma-muted mt-1 text-sm">Les acheteurs cherchent, les vendeurs trouvent.</p>
         </div>
 
         {/* Search */}
@@ -47,7 +47,7 @@ export default function DemandFeed() {
           </svg>
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher par titre, quartier, description..."
-            className="w-full pl-12 pr-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-waxma-highlight focus:outline-none text-sm bg-white" />
+            className="w-full pl-12 pr-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-wakhma-highlight focus:outline-none text-sm bg-white" />
         </div>
 
         {/* Category pills */}
@@ -56,8 +56,8 @@ export default function DemandFeed() {
             <button key={cat} onClick={() => setSelectedCat(cat)}
               className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition ${
                 selectedCat === cat
-                  ? 'bg-waxma-highlight text-white shadow-lg shadow-waxma-highlight/20'
-                  : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-waxma-highlight/30'
+                  ? 'bg-wakhma-highlight text-white shadow-lg shadow-wakhma-highlight/20'
+                  : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-wakhma-highlight/30'
               }`}>
               {cat}
             </button>

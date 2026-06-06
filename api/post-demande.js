@@ -1,4 +1,4 @@
-// WAXMA FREE — Post Demand API
+// Wakhma FREE — Post Demand API
 let demands = [];
 
 export default function handler(req, res) {

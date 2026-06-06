@@ -1,9 +1,9 @@
 // ══════════════════════════════════════════════
-// WAXMA FREE — Storage & Business Logic
+// Wakhma FREE — Storage & Business Logic
 // ══════════════════════════════════════════════
 
 export const DEMAND_LIMIT_PER_WEEK = 3;
-export const PRO_URL = 'https://waxma-pro.lu';
+export const PRO_URL = 'https://wakhma-pro.lu';
 
 export const CATEGORIES = [
   'Téléphones', 'TV & Écrans', 'Frigo & Congélateur', 'Climatiseur & Ventilateur',
@@ -31,7 +31,7 @@ export function getWeekKey() {
 
 // ── Weekly Demand Limit ──
 export function getWeeklyCount(phone) {
-  const key = `waxma_weekly_${phone}_${getWeekKey()}`;
+  const key = `wakhma_weekly_${phone}_${getWeekKey()}`;
   return parseInt(localStorage.getItem(key) || '0', 10);
 }
 
@@ -40,21 +40,21 @@ export function isLimitReached(phone) {
 }
 
 export function incrementWeeklyCount(phone) {
-  const key = `waxma_weekly_${phone}_${getWeekKey()}`;
+  const key = `wakhma_weekly_${phone}_${getWeekKey()}`;
   const count = getWeeklyCount(phone) + 1;
   localStorage.setItem(key, String(count));
 }
 
 // ── Phone Storage ──
 export function getStoredPhone() {
-  return localStorage.getItem('waxma_free_phone') || '';
+  return localStorage.getItem('wakhma_free_phone') || '';
 }
 export function setStoredPhone(phone) {
-  localStorage.setItem('waxma_free_phone', phone);
+  localStorage.setItem('wakhma_free_phone', phone);
 }
 
 // ── Demand Storage (localStorage) ──
-const DEMANDS_KEY = 'waxma_free_demands';
+const DEMANDS_KEY = 'wakhma_free_demands';
 
 export function saveDemandLocal(demand) {
   const demands = getDemandsLocal();

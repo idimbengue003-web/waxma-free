@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-waxma-primary: #0A1628;
-  --color-waxma-secondary: #111D35;
-  --color-waxma-accent: #1B3A5C;
-  --color-waxma-highlight: #00E676;
-  --color-waxma-text: #E8EDF5;
-  --color-waxma-muted: #7B8CA7;
-  --color-waxma-card: #FFFFFF;
-  --color-waxma-gold: #FFD700;
+  --color-wakhma-primary: #0A1628;
+  --color-wakhma-secondary: #111D35;
+  --color-wakhma-accent: #1B3A5C;
+  --color-wakhma-highlight: #00E676;
+  --color-wakhma-text: #E8EDF5;
+  --color-wakhma-muted: #7B8CA7;
+  --color-wakhma-card: #FFFFFF;
+  --color-wakhma-gold: #FFD700;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 

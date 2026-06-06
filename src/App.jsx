@@ -34,7 +34,7 @@ export default function App() {
     <HelmetProvider>
       <div className="min-h-screen flex flex-col bg-white">
         <Helmet>
-          <title>WAXMA Free — Le marché rapide de Dakar</title>
+          <title>Wakhma Free — Le marché rapide de Dakar</title>
           <meta name="description" content="Poste ce que tu veux acheter à Dakar. Gratos." />
         </Helmet>
         <Header />
@@ -49,20 +49,20 @@ function Home({ onPosted }) {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-waxma-primary via-waxma-secondary to-waxma-accent py-20 px-4">
+      <section className="bg-gradient-to-br from-wakhma-primary via-wakhma-secondary to-wakhma-accent py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-block bg-waxma-highlight/10 text-waxma-highlight text-xs font-bold px-4 py-1.5 rounded-lg border border-waxma-highlight/20 mb-6 uppercase tracking-wider">
+          <div className="inline-block bg-wakhma-highlight/10 text-wakhma-highlight text-xs font-bold px-4 py-1.5 rounded-lg border border-wakhma-highlight/20 mb-6 uppercase tracking-wider">
             100% Gratuit
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
             Poste ce que tu veux.<br />
             <span className="gradient-text">Les vendeurs te trouvent.</span>
           </h1>
-          <p className="text-waxma-muted text-lg md:text-xl max-w-2xl mx-auto mb-10">
-            WAXMA Free, le marché rapide de Dakar. Dis ce que tu cherches, reçois des offres sur WhatsApp.
+          <p className="text-wakhma-muted text-lg md:text-xl max-w-2xl mx-auto mb-10">
+            Wakhma Free, le marché rapide de Dakar. Dis ce que tu cherches, reçois des offres sur WhatsApp.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#post" className="bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl hover:shadow-waxma-highlight/20 transition-all text-lg animate-pulse-glow">
+            <a href="#post" className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl hover:shadow-wakhma-highlight/20 transition-all text-lg animate-pulse-glow">
               + Poster une demande
             </a>
             <a href="#feed" className="bg-white/10 text-white font-bold px-10 py-4 rounded-xl hover:bg-white/20 transition-all border border-white/20 text-lg">
@@ -93,13 +93,13 @@ function Home({ onPosted }) {
       </section>
 
       {/* CTA vendeur */}
-      <section className="py-16 px-4 bg-waxma-primary">
+      <section className="py-16 px-4 bg-wakhma-primary">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-black text-white mb-4">Tu es vendeur ?</h2>
-          <p className="text-waxma-muted mb-8">Sur WAXMA PRO, accède aux demandes des clients et révèle leurs numéros WhatsApp pour les contacter directement.</p>
-          <a href="https://waxma-pro.lu" target="_blank" rel="noopener noreferrer"
-            className="inline-block bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl transition-all text-lg">
-            WAXMA PRO →
+          <p className="text-wakhma-muted mb-8">Sur Wakhma PRO, accède aux demandes des clients et révèle leurs numéros WhatsApp pour les contacter directement.</p>
+          <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer"
+            className="inline-block bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-10 py-4 rounded-xl hover:shadow-xl transition-all text-lg">
+            Wakhma PRO →
           </a>
         </div>
       </section>

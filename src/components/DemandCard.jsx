@@ -6,7 +6,7 @@ export default function DemandCard({ demand }) {
       {demand.photo && (
         <div className="relative">
           <img src={demand.photo} alt={demand.title} className="w-full h-48 object-cover" />
-          <span className="absolute top-3 left-3 bg-waxma-highlight/90 text-white text-xs font-bold px-3 py-1 rounded-lg backdrop-blur-sm">
+          <span className="absolute top-3 left-3 bg-wakhma-highlight/90 text-white text-xs font-bold px-3 py-1 rounded-lg backdrop-blur-sm">
             {demand.category}
           </span>
         </div>
@@ -14,7 +14,7 @@ export default function DemandCard({ demand }) {
 
       <div className="p-5">
         {!demand.photo && (
-          <span className="inline-block text-xs font-bold px-3 py-1 rounded-lg mb-3 bg-waxma-highlight/10 text-waxma-highlight border border-waxma-highlight/20">
+          <span className="inline-block text-xs font-bold px-3 py-1 rounded-lg mb-3 bg-wakhma-highlight/10 text-wakhma-highlight border border-wakhma-highlight/20">
             {demand.category}
           </span>
         )}
@@ -24,7 +24,7 @@ export default function DemandCard({ demand }) {
         <div className="flex items-center gap-3 mb-3">
           <span className="text-gray-400 text-xs">{timeAgo(demand.createdAt)}</span>
           {demand.quartier && (
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-waxma-highlight/10 text-waxma-highlight">
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-wakhma-highlight/10 text-wakhma-highlight">
               {demand.quartier}
             </span>
           )}
@@ -44,8 +44,8 @@ export default function DemandCard({ demand }) {
             <span className="text-base">📱</span>
             <span className="text-sm font-mono text-gray-500">{maskPhone(demand.whatsapp)}</span>
           </div>
-          <a href="https://waxma-pro.lu" target="_blank" rel="noopener noreferrer"
-            className="text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r from-waxma-highlight to-emerald-600 text-white hover:shadow-lg transition">
+          <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer"
+            className="text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white hover:shadow-lg transition">
             Voir sur PRO →
           </a>
         </div>
