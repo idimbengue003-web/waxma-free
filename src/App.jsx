@@ -5,6 +5,8 @@ import Footer from './components/Footer';
 import DemandForm from './components/DemandForm';
 import DemandFeed from './components/DemandFeed';
 import Admin from './components/Admin';
+import LoginPage from './components/LoginPage';
+import { isAdmin } from './utils/storage';
 
 function getRoute() {
   const hash = window.location.hash || '#/';
@@ -14,6 +16,7 @@ function getRoute() {
 export default function App() {
   const [route, setRoute] = useState(getRoute());
   const [newDemand, setNewDemand] = useState(null);
+  const [authVersion, setAuthVersion] = useState(0);
 
   useEffect(() => {
     const onHash = () => setRoute(getRoute());
@@ -25,7 +28,23 @@ export default function App() {
     switch (route) {
       case 'post': return <DemandForm onPosted={setNewDemand} />;
       case 'feed': return <DemandFeed key={Date.now()} />;
-      case 'admin': return <Admin />;
+      case 'admin':
+        if (!isAdmin()) {
+          return (
+            <div className="min-h-[50vh] flex items-center justify-center px-4">
+              <div className="text-center max-w-sm">
+                <div className="text-6xl mb-4">🚫</div>
+                <h1 className="text-2xl font-black text-red-600 mb-3">Accès refusé</h1>
+                <p className="text-gray-500 mb-6">Seul l'administrateur peut accéder à cette page.</p>
+                <a href="#/" className="inline-block bg-wakhma-primary text-white font-bold px-8 py-3 rounded-xl hover:opacity-90 transition">
+                  Retour à l'accueil
+                </a>
+              </div>
+            </div>
+          );
+        }
+        return <Admin />;
+      case 'login': return <LoginPage onLogin={() => setAuthVersion(v => v + 1)} />;
       default: return <Home onPosted={setNewDemand} />;
     }
   };
@@ -37,7 +56,7 @@ export default function App() {
           <title>Wakhma Free — Le marché rapide de Dakar</title>
           <meta name="description" content="Poste ce que tu veux acheter à Dakar. Gratos." />
         </Helmet>
-        <Header />
+        <Header key={authVersion} />
         <main className="flex-1">{renderPage()}</main>
         <Footer />
       </div>

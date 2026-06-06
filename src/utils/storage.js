@@ -67,6 +67,34 @@ export function getDemandsLocal() {
   catch { return []; }
 }
 
+// ── Auth & Roles ──
+const AUTH_KEY = 'wakhma_free_auth';
+const ADMIN_PASSWORD = 'wakhma2024';
+
+export function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null');
+  } catch { return null; }
+}
+
+export function isAdmin() {
+  const user = getUser();
+  return user && user.role === 'admin';
+}
+
+export function loginAdmin(password) {
+  if (password === ADMIN_PASSWORD) {
+    const user = { role: 'admin', loggedIn: true, since: new Date().toISOString() };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    return true;
+  }
+  return false;
+}
+
+export function logoutUser() {
+  localStorage.removeItem(AUTH_KEY);
+}
+
 // ── Helpers ──
 export function formatFCFA(n) {
   if (!n) return '0 FCFA';

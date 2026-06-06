@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK } from '../utils/storage';
+import { getStoredPhone, isLimitReached, getWeeklyCount, DEMAND_LIMIT_PER_WEEK, getUser, isAdmin, logoutUser } from '../utils/storage';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [limitInfo, setLimitInfo] = useState({ reached: false, count: 0 });
+  const [user, setUser] = useState(getUser());
 
   useEffect(() => {
     const phone = getStoredPhone();
@@ -12,21 +13,33 @@ export default function Header() {
     }
   }, []);
 
+  const handleLogout = () => {
+    logoutUser();
+    setUser(null);
+    setMenuOpen(false);
+  };
+
+  const showAdmin = user && user.role === 'admin';
+
   return (
     <header className="bg-wakhma-primary/95 backdrop-blur-md sticky top-0 z-50 border-b border-wakhma-accent/20">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="bg-gradient-to-br from-wakhma-highlight to-emerald-600 text-white font-extrabold text-xl px-4 py-2 rounded-xl tracking-tight shadow-lg shadow-wakhma-highlight/20">
+          <a href="#/" className="bg-gradient-to-br from-wakhma-highlight to-emerald-600 text-white font-extrabold text-xl px-4 py-2 rounded-xl tracking-tight shadow-lg shadow-wakhma-highlight/20">
             Wakhma
-          </div>
+          </a>
           <span className="text-wakhma-highlight font-bold text-xs bg-wakhma-highlight/10 px-3 py-1 rounded-lg border border-wakhma-highlight/20 uppercase tracking-wider">
             Free
           </span>
         </div>
 
-        {/* Desktop */}
+        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <a href="#feed" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">Demandes</a>
+          <a href="#/" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">Accueil</a>
+          <a href="#feed" className="text-wakhma-text font-medium hover:text-wakhma-highlight transition-colors text-sm">Catégories</a>
+          <a href="#post" className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-wakhma-highlight/20 transition-all animate-pulse-glow text-sm">
+            Déposer annonce
+          </a>
           {getStoredPhone() && (
             <span className={`text-xs font-bold px-3 py-1.5 rounded-lg ${
               limitInfo.reached ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-wakhma-highlight/10 text-wakhma-highlight border border-wakhma-highlight/20'
@@ -34,14 +47,24 @@ export default function Header() {
               {limitInfo.count}/{DEMAND_LIMIT_PER_WEEK} cette semaine
             </span>
           )}
-          <a href="#post" className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl hover:shadow-lg hover:shadow-wakhma-highlight/20 transition-all animate-pulse-glow text-sm">
-            + Poster
-          </a>
           <a href="https://wakhma-pro.lu" target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2 bg-wakhma-highlight/10 text-wakhma-highlight border border-wakhma-highlight/20 px-4 py-2 rounded-xl text-sm font-bold hover:bg-wakhma-highlight/20 transition">
             Vendeur ? → PRO
           </a>
-          <a href="#/admin" className="text-wakhma-muted hover:text-wakhma-text transition-colors text-xs">Admin</a>
+          {showAdmin ? (
+            <>
+              <a href="#/admin" className="text-wakhma-highlight font-bold text-sm px-4 py-2 rounded-xl bg-wakhma-highlight/10 border border-wakhma-highlight/20 hover:bg-wakhma-highlight/20 transition">
+                ADMIN 🔒
+              </a>
+              <button onClick={handleLogout} className="text-wakhma-muted hover:text-red-400 transition-colors text-sm font-medium">
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <a href="#/login" className="text-wakhma-muted hover:text-wakhma-text transition-colors text-sm font-medium">
+              Se connecter
+            </a>
+          )}
         </nav>
 
         {/* Mobile */}
@@ -74,8 +97,9 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-wakhma-secondary border-t border-wakhma-accent/20 animate-fade-in-up">
           <nav className="flex flex-col p-6 gap-3">
-            <a href="#feed" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">Demandes</a>
-            <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">+ Poster une demande</a>
+            <a href="#/" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">Accueil</a>
+            <a href="#feed" onClick={() => setMenuOpen(false)} className="text-wakhma-text font-medium py-3 px-5 rounded-xl hover:bg-wakhma-accent/10 transition text-sm">Catégories</a>
+            <a href="#post" onClick={() => setMenuOpen(false)} className="bg-gradient-to-r from-wakhma-highlight to-emerald-600 text-white font-bold py-3.5 px-5 rounded-xl text-center text-sm">Déposer annonce</a>
 
             <div className="rounded-xl p-4 mt-1 bg-wakhma-highlight/5 border border-wakhma-highlight/15">
               <div className="flex items-center gap-2 mb-2">
@@ -94,7 +118,15 @@ export default function Header() {
                 Limite 3/sem atteinte → Wakhma Pro
               </div>
             )}
-            <a href="#/admin" onClick={() => setMenuOpen(false)} className="text-wakhma-muted text-xs py-2 px-5 hover:text-wakhma-text">Admin</a>
+
+            {showAdmin ? (
+              <>
+                <a href="#/admin" onClick={() => setMenuOpen(false)} className="text-wakhma-highlight font-bold py-3 px-5 rounded-xl bg-wakhma-highlight/10 border border-wakhma-highlight/20 text-sm">ADMIN 🔒</a>
+                <button onClick={handleLogout} className="text-red-400 font-medium py-3 px-5 rounded-xl hover:bg-red-500/10 transition text-sm text-left">Déconnexion</button>
+              </>
+            ) : (
+              <a href="#/login" onClick={() => setMenuOpen(false)} className="text-wakhma-muted py-3 px-5 rounded-xl hover:text-wakhma-text hover:bg-wakhma-accent/10 transition text-sm">Se connecter</a>
+            )}
           </nav>
         </div>
       )}
